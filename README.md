@@ -1,4 +1,4 @@
-# miinventory-web FE app for my Miinventory system
+# Miinventory system FE app
 
 ## Installation
 Here are the steps you need to follow to install the dependencies.
