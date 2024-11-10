@@ -44,7 +44,13 @@ const brandData: BRAND[] = [
   },
 ];
 
-const UserListTable = ({ users }) => {
+interface UserInterface {
+    name: string,
+    email: string,
+    age: number
+}
+
+const UserListTable = ({ users }: {users: any}) => {
   return (
     <div className="rounded-sm border border-stroke bg-white px-5 pb-2.5 pt-6 shadow-default dark:border-strokedark dark:bg-boxdark sm:px-7.5 xl:pb-1">
       <h4 className="mb-6 text-xl font-semibold text-black dark:text-white">
@@ -70,7 +76,7 @@ const UserListTable = ({ users }) => {
           </div>
         </div>
 
-        {users.map((user, key) => (
+        {users.map((user: UserInterface, key: number) => (
           <div
             className={`grid grid-cols-3 sm:grid-cols-5 ${
               key%2 === 1
