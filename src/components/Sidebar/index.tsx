@@ -112,7 +112,11 @@ const menuGroups = [
           </svg>
         ),
         label: "Users",
-        route: "/users",
+        route: "#",
+        children: [
+          { label: "Users List", route: "/users" },
+          { label: "Add New", route: "/users/create" },
+        ],
       },
       {
         icon: (
@@ -368,8 +372,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
             />
           </Link> */}
           <button 
-          className="block" 
-          style={{color: "#fff"}}
+          className="block" style={{color: "#fff"}}
           >
             Miinventory
           </button>
