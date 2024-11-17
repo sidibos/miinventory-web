@@ -24,7 +24,6 @@ const Users = () => {
         async function fetchUsers () {
             const resp = await fetch(apiURl);
             const data = await resp.json();
-            console.log(data);
             setUserList(data);
         };
         fetchUsers();

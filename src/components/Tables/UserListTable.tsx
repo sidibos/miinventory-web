@@ -1,5 +1,10 @@
 import { BRAND } from "@/types/brand";
 import Image from "next/image";
+import Button from "@components/Button/Button";
+import IconButton from "@components/Button/IconButton";
+import ConfirmDialog from "@components/Dialog/ConfirmDialog";
+import { useState } from "react";
+import { redirect, useRouter } from 'next/navigation';
 
 const brandData: BRAND[] = [
   {
@@ -50,62 +55,119 @@ interface UserInterface {
     age: number
 }
 
+// function submitHandler(event) {
+//     event.preventDefault();
+
+//     const postData = {
+//         body: enteredBody,
+//         author: enteredName
+//     };
+//     props.onAddPost(postData);
+//     props.onCancel();
+// }
+
 const UserListTable = ({ users }: {users: any}) => {
-  return (
-    <div className="rounded-sm border border-stroke bg-white px-5 pb-2.5 pt-6 shadow-default dark:border-strokedark dark:bg-boxdark sm:px-7.5 xl:pb-1">
-      <h4 className="mb-6 text-xl font-semibold text-black dark:text-white">
-        User List
-      </h4>
+    const [confirmOpen, setConfirmOpen] = useState(false);
+    const [userEmail, setUserEmail] = useState('');
+    const router = useRouter()
 
-      <div className="flex flex-col">
-        <div className="grid grid-cols-3 rounded-sm bg-gray-2 dark:bg-meta-4 sm:grid-cols-5">
-          <div className="p-2.5 xl:p-5">
-            <h5 className="text-sm font-medium uppercase xsm:text-base">
-              Name
-            </h5>
-          </div>
-          <div className="p-2.5 text-center xl:p-5">
-            <h5 className="text-sm font-medium uppercase xsm:text-base">
-              Email
-            </h5>
-          </div>
-          <div className="p-2.5 text-center xl:p-5">
-            <h5 className="text-sm font-medium uppercase xsm:text-base">
-              Age
-            </h5>
-          </div>
+    function deleteUser(event: React.MouseEvent<HTMLButtonElement>)
+    {
+        //event.preventDefault();
+        console.log(userEmail);
+
+        const myDataObject ={ email: userEmail}
+        const apiURl = 'http://localhost:7777/api/users/delete?email=' + encodeURIComponent(userEmail);
+        fetch(apiURl, {
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+           // body: JSON.stringify(myDataObject)
+        })
+        .then(() => {
+            console.log(`User ${userEmail} deleted!`);
+            //redirect('/');
+        })
+        .catch(error => console.error(error.message))
+        .finally(() => window.location.href = '/users');
+    }
+
+    return (
+        <div className="rounded-sm border border-stroke bg-white px-5 pb-2.5 pt-6 shadow-default dark:border-strokedark dark:bg-boxdark sm:px-7.5 xl:pb-1">
+            <h4 className="mb-6 text-xl font-semibold text-black dark:text-white">
+                User List
+            </h4>
+
+            <div className="flex flex-col">
+                <div className="grid grid-cols-3 rounded-sm bg-gray-2 dark:bg-meta-4 sm:grid-cols-5">
+                <div className="p-2.5 xl:p-5">
+                    <h5 className="text-sm font-medium uppercase xsm:text-base">
+                    Name
+                    </h5>
+                </div>
+                <div className="p-2.5 text-center xl:p-5">
+                    <h5 className="text-sm font-medium uppercase xsm:text-base">
+                    Email
+                    </h5>
+                </div>
+                <div className="p-2.5 text-center xl:p-5">
+                    <h5 className="text-sm font-medium uppercase xsm:text-base">
+                    Age
+                    </h5>
+                </div>
+                <div className="p-2.5 text-center xl:p-5">
+                    <h5 className="text-sm font-medium uppercase xsm:text-base">
+                    Actions
+                    </h5>
+                </div>
+                </div>
+
+                {users.map((user: UserInterface, key: number) => (
+                <div
+                    className={`grid grid-cols-3 sm:grid-cols-5 ${
+                    key%2 === 1
+                        ? ""
+                        : "border-b border-stroke dark:border-strokedark"
+                    }`}
+                    key={key}
+                >
+                    <div className="flex items-center gap-3 p-2.5 xl:p-5">
+                    <div className="flex-shrink-0">
+                        <Image src="/images/brand/brand-03.svg" alt="Brand" width={48} height={48} />
+                    </div>
+                    <p className="hidden text-black dark:text-white sm:block">
+                        {user.name}
+                    </p>
+                    </div>
+
+                    <div className="flex items-center justify-center p-2.5 xl:p-5">
+                    <p className="text-black dark:text-white">{user.email}</p>
+                    </div>
+
+                    <div className="flex items-center justify-center p-2.5 xl:p-5">
+                    <p className="text-meta-3">{user.age}</p>
+                    </div>
+                    <div className="flex items-center justify-center p-2.5 xl:p-5">
+                        <div>
+                            <IconButton aria-label="delete" onClick={() => {setConfirmOpen(true); setUserEmail(user.email);}}>
+                                Delete
+                            </IconButton>
+                            <ConfirmDialog
+                                title="Delete User?"
+                                open={confirmOpen}
+                                onClose={() => setConfirmOpen(false)}
+                                onConfirm={deleteUser}
+                            >
+                                Are you sure you want to delete this user?
+                            </ConfirmDialog>
+                        </div>
+                    </div>
+                </div>
+                ))}
+            </div>
         </div>
-
-        {users.map((user: UserInterface, key: number) => (
-          <div
-            className={`grid grid-cols-3 sm:grid-cols-5 ${
-              key%2 === 1
-                ? ""
-                : "border-b border-stroke dark:border-strokedark"
-            }`}
-            key={key}
-          >
-            <div className="flex items-center gap-3 p-2.5 xl:p-5">
-              <div className="flex-shrink-0">
-                <Image src="/images/brand/brand-03.svg" alt="Brand" width={48} height={48} />
-              </div>
-              <p className="hidden text-black dark:text-white sm:block">
-                {user.name}
-              </p>
-            </div>
-
-            <div className="flex items-center justify-center p-2.5 xl:p-5">
-              <p className="text-black dark:text-white">{user.email}</p>
-            </div>
-
-            <div className="flex items-center justify-center p-2.5 xl:p-5">
-              <p className="text-meta-3">{user.age}</p>
-            </div>
-          </div>
-        ))}
-      </div>
-    </div>
-  );
+    );
 };
 
 export default UserListTable;
