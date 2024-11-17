@@ -35,6 +35,12 @@ const Users = () => {
             <div className="flex flex-col gap-10">
                 <UserListTable users={userList} />
             </div>
+            <Link
+              href="/users/create"
+              className="inline-flex items-center justify-center mt-3 rounded-md bg-primary px-10 py-4 text-center font-medium text-white hover:bg-opacity-90 lg:px-8 xl:px-10"
+            >
+              Add New
+            </Link>
         </DefaultLayout>
     );
 };

@@ -2,13 +2,14 @@
 
 import Breadcrumb from "@/components/Breadcrumbs/Breadcrumb";
 import { Metadata } from "next";
+import Link from "next/link";
 import DefaultLayout from "@/components/Layouts/DefaultLayout";
 import { useState, FormEvent } from "react";
 
 // export const metadata: Metadata = {
-//     title: "Next.js Form Layout | TailAdmin - Next.js Dashboard Template",
+//     title: "User List",
 //     description:
-//       "This is Next.js Form Layout page for TailAdmin - Next.js Tailwind CSS Admin Dashboard Template",
+//       "This is User list",
 // };
 
 export default function Page() {
@@ -25,7 +26,7 @@ export default function Page() {
       try {
         const formData = new FormData(event.currentTarget)
         
-        const response = await fetch('http://localhost:7777/api/users/add', {
+        const response = await fetch(formUrl, {
           method: 'POST',
           body: formData,
         });
@@ -39,7 +40,7 @@ export default function Page() {
             setErrorMessage(null);
             setSuccessMessage('User saved successfully');
         }
-        console.log(data);
+        //console.log(data);
       } catch (error) {
         // Handle error if necessary
         console.error(error)
@@ -98,7 +99,7 @@ export default function Page() {
                             />
                         </div>
 
-                        <button type="submit"  disabled={isLoading} className="flex w-full justify-center rounded bg-primary p-3 font-medium text-gray hover:bg-opacity-90">
+                        <button type="submit"  disabled={isLoading} className="flex w-full justify-center mt-3 rounded bg-primary p-3 font-medium text-gray hover:bg-opacity-90">
                             {isLoading ? 'Loading...' : 'Submit'}
                         </button>
 
@@ -110,6 +111,14 @@ export default function Page() {
                         </div>
                     </div>
                 </form>
+                <div>
+                    <Link
+                        href="/users"
+                        className="inline-flex items-center justify-center rounded-md bg-primary px-10 py-4 ml-6 text-center font-medium text-white hover:bg-opacity-90 lg:px-8 xl:px-10"
+                    >
+                        Go to User list
+                    </Link>
+                </div>
             </div>
         </DefaultLayout>
     )
